@@ -16,7 +16,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const mySQLStore = require('express-mysql-session')(session);
 const helmet = require('helmet');
-
+const cors = require('cors');
 
 // Create an instance of the express app
 const app = express();
@@ -47,13 +47,6 @@ app.use(session({
     } 
 }));
 
-// Setup for EJS templating
-app.set("views", path.join(__dirname, "public/ejs"));
-app.set("view engine", "ejs");
-
-// Setup the path for static files (images, etc.)
-app.use(express.static(path.join(__dirname, "public")));
-
 // Set up automatic logging on the console for development
 app.use(morgan('dev'));
 
@@ -63,19 +56,30 @@ app.use(flash());
 // Use more headers for extra security
 app.use(helmet());
 
+// Allow specific cross origin requests from the React frontend
+app.use(cors({
+    origin: 'http://localhost:3001', // React app is on port 3001
+    methods: ['GET', 'POST'],  // Allow only these HTTP methods
+    credentials: true  // Allow cookies and authentication headers
+}));
+
 // All routes
-app.get("/", (req, res) => {
-    res.send('Hello friend');
-})
+const indexRouter = require("./src/routes/index");
+const loginRouter = require("./src/routes/login");
+app.use("/", indexRouter);
+app.use("/login", loginRouter);
 
 // Catch-all route when no viable route is found
 app.use((req, res, next) => {
     next(httpErrors(404));
 });
+
+// General error handling
 app.use((err, req, res, next) => {
     res.status(err.status || 500);
 });
 
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
 });
