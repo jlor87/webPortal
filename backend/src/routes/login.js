@@ -17,7 +17,8 @@ router.post('/', async (req, res) => {
             req.session.name = user.name;
             res.json({
                 success: true,
-                name: user.name
+                name: user.name,
+                userId: user.userId
             });
         }
         else{

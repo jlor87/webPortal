@@ -36,6 +36,7 @@ function Login() {
       if(data.success){
         dispatch(setUser({name: data.name, userId: data.userId}));
         alert('Login successful. Welcome ' + data.name + '!');  // Display an alert with the received data
+        console.log(data.userId);
         navigate('/orders');
       }
       else{

@@ -66,8 +66,10 @@ app.use(cors({
 // All routes
 const indexRouter = require("./src/routes/index");
 const loginRouter = require("./src/routes/login");
+const ordersRouter = require("./src/routes/orders");
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
+app.use("/orders", ordersRouter);
 
 // Catch-all route when no viable route is found
 app.use((req, res, next) => {
