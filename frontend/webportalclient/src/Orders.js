@@ -1,59 +1,60 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('')
+  const [name, setName] = useState('');
+  const [userId, setUserId] = useState('');
+  const [orderHistory, setOrderHistory] = useState('');
 
-  const attemptLogin = async(event) =>{
-    event.preventDefault(); // Prevents the form from submitting and reloading the page
-
-    try{
-      const serverResponse = await fetch('http://localhost:3000/login',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: username,
-          password: password
-        }),
-        credentials: 'include' // Allows CORS to work properly on the server
-      });
-      const data = await serverResponse.json();  // Use .text() if it's a string like 'admin'
-      if(data.success){
-        alert('Login successful. Welcome ' + data.name + '!');  // Display an alert with the received data
+  useEffect(() => {
+    async function getOrderHistory(){
+      try{
+        const serverResponse = await fetch('http://localhost:3000/order', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: {
+            userId: userId
+          }
+        });
+        const orderHistoryData = await serverResponse.json();
+        console.log(orderHistoryData);
+        if(orderHistoryData){
+          setOrderHistory(orderHistoryData);
+        }
+        else{
+          alert(`An error occured retrieving the user's order history!`);
+        }
       }
-      else{
-        alert('Login unsuccessful. Please try again!');
+      catch(error){
+        console.log(error);
       }
-      
-
     }
-    catch(error){
-      alert(error);
-    }
-  }
+  }, []);
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Welcome to the portal. Please login to continue.
+          Hello! Below is your order history.
         </p>
-        <form onSubmit={attemptLogin}>
-          <label htmlFor='username'>Username</label>
-          <input type='text' name='username' id='username' onChange={(e) => setUsername(e.target.value)}></input>
-            <br></br>
-          <label htmlFor='password'>Password</label>
-          <input type='password' name='password' id='password' onChange={(e) => setPassword(e.target.value)}></input>
-            <br></br>
-          <button type="submit">
-            Login
-          </button>
-        </form>
+        <table>
+          <tr>
+            <th>Order ID</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Order Total</th>
+            <th>Payment Status</th>
+            <th>Tracking Number</th>
+            <th>Shipping Status</th>
+          </tr>
+          { orderHistory && orderHistory.length > 0
+
+          }
+        </table>
       </header>
     </div>
   );
