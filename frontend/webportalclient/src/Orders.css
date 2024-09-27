@@ -38,10 +38,27 @@
     border: 1px solid black;
   }
 
+  .tableDataLink{
+    font-size: 16px;
+    border: 1px solid black;
+  }
+
+  .tableDataLink:hover {
+    color: red;
+  }
+
   .tableHeader {
     font-size: 16px;
     border: 1px solid black;
     padding: 6px;
+  }
+
+  .link {
+    font-size: 14px;
+  }
+
+  .link:hover {
+    color: red;
   }
   
   @keyframes App-logo-spin {

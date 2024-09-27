@@ -2,14 +2,21 @@ import logo from './logo.svg';
 import './Orders.css';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function Orders() {
   const name = useSelector((state) => state.user.name);
   const userId = useSelector((state) => state.user.userId);
   const [orderHistory, setOrderHistory] = useState([]);
+  const navigate = useNavigate();
 
-  console.log(name);
-  console.log(userId);
+  const goToProductDetails = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
+  const logout = () => {
+    navigate(`/`)
+  }
 
   useEffect(() => {
     async function getOrderHistory(){
@@ -22,7 +29,6 @@ function Orders() {
         });
 
         const orderHistoryData = await serverResponse.json();
-        console.log("Fetched order data:", orderHistoryData);
 
         if(orderHistoryData && orderHistoryData.success){
           if(Array.isArray(orderHistoryData.orders)){
@@ -31,7 +37,6 @@ function Orders() {
           else{
             setOrderHistory([orderHistoryData.orders]);
           }
-          console.log("orderHistory length:", orderHistory.length);
         }
         else{
           alert(`An error occured retrieving the user's order history!`);
@@ -49,12 +54,11 @@ function Orders() {
     <div className="Orders">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Hello {name}! Below is your order history.
-        </p>
+
+        <p>Hello, {name}! Below is your order history.</p>
+
         { orderHistory.length > 0 ? (
                   <table className='tableBorders'>
-                  <thead>
                     <tr>
                       <th className='tableHeader'> Order ID </th>
                       <th className='tableHeader'> Product Name </th>
@@ -64,13 +68,11 @@ function Orders() {
                       <th className='tableHeader'> Tracking Number </th>
                       <th className='tableHeader'> Shipping Status </th>
                     </tr>
-                  </thead>
-        
-                  <tbody>
+    
                     {orderHistory.map((order) => (
                         <tr key={order.orderId}>
                           <td className='tableData'> {order.orderId} </td>
-                          <td className='tableData'> {order.productName} </td>
+                          <td className='tableDataLink' onClick={ () => goToProductDetails(order.productId) } > {order.productName} </td>
                           <td className='tableData'> {order.quantity} </td>
                           <td className='tableData'> ${order.orderTotal} </td>
                           <td className='tableData'> {order.paymentStatus} </td>
@@ -78,13 +80,12 @@ function Orders() {
                           <td className='tableData'> {order.shippingStatus} </td>
                         </tr>
                     ))}
-                  </tbody>
                 </table>
         ) : (
           <p>No orders found.</p>
-        )
+        )}
 
-        }
+        <p className="link" onClick={logout}>Logout</p>
 
       </header>
     </div>

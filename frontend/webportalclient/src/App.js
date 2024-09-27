@@ -8,6 +8,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import Orders from "./Orders";
+import Product from "./Product";
 import { useDispatch } from 'react-redux';
 import { setUser } from './userSlice';
 
@@ -35,7 +36,6 @@ function Login() {
       const data = await serverResponse.json();  // Use .text() if it's a string like 'admin'
       if(data.success){
         dispatch(setUser({name: data.name, userId: data.userId}));
-        alert('Login successful. Welcome ' + data.name + '!');  // Display an alert with the received data
         console.log(data.userId);
         navigate('/orders');
       }
@@ -74,9 +74,10 @@ function Login() {
 function App(){
   return (
     <Router>
-      <Routes>
-        <Route path="/orders" element={<Orders/>}></Route>
+      <Routes> 
         <Route path="/" element={<Login />} />
+        <Route path="/orders" element={<Orders/>}></Route>
+        <Route path="/product/:productId" element={<Product/>}></Route>
       </Routes>
     </Router>
   );
