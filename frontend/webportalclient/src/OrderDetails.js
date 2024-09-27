@@ -21,18 +21,13 @@ function App() {
         }),
         credentials: 'include' // Allows CORS to work properly on the server
       });
-      const data = await serverResponse.json();  // Use .text() if it's a string like 'admin'
-      if(data.success){
-        alert('Login successful. Welcome ' + data.name + '!');  // Display an alert with the received data
-      }
-      else{
-        alert('Login unsuccessful. Please try again!');
-      }
-      
+      const data = await serverResponse.text();  // Use .text() if it's a string like 'admin'
+      console.log('Response from server:', data);  // Log the response in the console
+      alert('Login successful. ' + data);  // Display an alert with the received data
 
     }
     catch(error){
-      alert(error);
+
     }
   }
 

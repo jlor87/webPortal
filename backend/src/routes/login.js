@@ -12,10 +12,16 @@ router.post('/', async (req, res) => {
         var [retrievedDataFromDb, otherFieldsFromDb] = await db.execute(`SELECT * FROM users WHERE username=? AND password=?;`, [username, password])
 
         if(retrievedDataFromDb.length > 0){ // The DB was able to find a match for the username and password
-            res.send("Hello, " + retrievedDataFromDb[0]['name']);
+            const user = retrievedDataFromDb[0];
+            req.session.userId = user.userId;
+            req.session.name = user.name;
+            res.json({
+                success: true,
+                name: user.name
+            });
         }
         else{
-            res.send("Incorrect username or password. Please try again!")
+            res.json({success: false});
         }
         
     }
