@@ -1,23 +1,21 @@
 import logo from './logo.svg';
-import './App.css';
+import './Orders.css';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-function App() {
-  const [name, setName] = useState('');
-  const [userId, setUserId] = useState('');
+function Orders() {
+  const name = useSelector((state) => state.user.name);
+  const userId = useSelector((state) => state.user.userId);
   const [orderHistory, setOrderHistory] = useState('');
 
   useEffect(() => {
     async function getOrderHistory(){
       try{
-        const serverResponse = await fetch('http://localhost:3000/order', {
+        const serverResponse = await fetch(`http://localhost:3000/order?userId=${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: {
-            userId: userId
-          }
         });
         const orderHistoryData = await serverResponse.json();
         console.log(orderHistoryData);
@@ -35,29 +33,38 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div className="Orders">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Hello! Below is your order history.
+          Hello {name}! Below is your order history.
         </p>
         <table>
-          <tr>
-            <th>Order ID</th>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Order Total</th>
-            <th>Payment Status</th>
-            <th>Tracking Number</th>
-            <th>Shipping Status</th>
-          </tr>
-          { orderHistory && orderHistory.length > 0
+          <thead>
+            <tr>
+              <th className='tableHeader'>Order ID</th>
+              <th className='tableHeader'>Product Name</th>
+              <th className='tableHeader'>Quantity</th>
+              <th className='tableHeader'>Order Total</th>
+              <th className='tableHeader'>Payment Status</th>
+              <th className='tableHeader'>Tracking Number</th>
+              <th className='tableHeader'>Shipping Status</th>
+            </tr>
+          </thead>
 
-          }
+          <tbody>
+            {/* {orderHistory && orderHistory.length > 0 ? (
+              orderHistory.map((order) => (
+
+              ))
+              )
+            } */}
+          </tbody>
+
         </table>
       </header>
     </div>
   );
 }
 
-export default App;
+export default Orders;
