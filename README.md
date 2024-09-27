@@ -19,6 +19,7 @@ A basic web portal to illustrate some fundamentals and features of full-stack we
    Type "npm install" and all the necessary modules should be installed.
 
 5. Set up the .env files:\
+   **NOTE: This app assumes you have ports 3000 and 3001 open! The NodeJS server runs on port 3000, while you must run the React app on port 3001!**\
    In the "backend" directory, you need to create a .env file using a text editor to set the environment variables for your server. It should contain:\
     DB_NAME="webPortal"\
     DB_HOST="localhost"\
